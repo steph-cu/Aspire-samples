@@ -3,15 +3,15 @@
 # @brief Code to read SMA Modbus registers
 """
 #======================================================================================
-#   SMA 7  IPAddress : "192.168.225.21, Port 502
-#   SMA 50 IPAddress : "192.168.225.50, Port 502
+#   SMA 7  IPAddress : <ip>, <port>
+#   SMA 50 IPAddress : <ip>, <port>
 #   baudrate : 9600
 #   Unit = 3
 #
 #	    NOTE: SMA 7 Does not support all the registers the SMA 50 has
 #
 #       NOTE: All Register Addresses in the Modbus Manual are (address + 1)
-#             i.e. model information in the manual 40021, address used in code 40020
+#             i.e. model information in the manual <register>, address used in code <register>
 #
 #====================================================================================
 #                           <<< Functions >>>
@@ -63,7 +63,7 @@ class SMACommunication:
         self.unit = unit
         self.timeout = timeout
         self.baudrate = baudrate
-        self.SMA50_IP = '192.168.225.50'
+        self.SMA50_IP = <alternate IP>
         # self.OpenClient()
         #self.SMAConnection = ModbusTcpClient('localhost')
 
@@ -143,16 +143,16 @@ class SMACommunication:
 
 #========== Status ==============================
 #
-# Register: 40224 (SunSpec); 40029 (SMA) operating status
+# Register: <register> (SunSpec); <register> (SMA) operating status
 # or
-# Register: 40224 (SMA); Overexcited vs Underexcited
+# Register: <register> (SMA); Overexcited vs Underexcited
 #
-# format : 40223
+# format : <register>
 #================================================
     def Status(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_input_registers(40223,1,slave=126) # Operating Status
+            rr = self.SMAConnection.read_input_registers(<register>,1,slave=126) # Operating Status
             Value = self.DecodeValue(rr, "uint16")
             self.SMAConnection.close()
             return Value
@@ -166,13 +166,13 @@ class SMACommunication:
 
 #========== AC Lifetime ===========================
 #
-# Register: 30153 (SMA); Total yield
+# Register: <register> (SMA); Total yield
 # ? why is this named AC lifetime?
 #==================================================
     def Ac_Lifetime(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30513,4,slave=self.unit) # AC lifetime
+            rr = self.SMAConnection.read_holding_registers(<register>,4,slave=self.unit) # AC lifetime
             Value = self.DecodeValue(rr, "uint64")
             self.SMAConnection.close()
             return Value/1000
@@ -186,12 +186,12 @@ class SMACommunication:
 
 #========== AC Power =============================
 #
-# Register 30775; Power
+# Register <register>; Power
 #=================================================
     def Ac_Power(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30775-1,2,slave=self.unit) # AC Power
+            rr = self.SMAConnection.read_holding_registers(<register>-1,2,slave=self.unit) # AC Power
             Value = self.DecodeValue(rr, "int32")
             self.SMAConnection.close()
             return Value/1000
@@ -204,12 +204,12 @@ class SMACommunication:
 
 #========== AC AN Voltage =======================
 #
-# Register 30783; Grid Voltage phase L1
+# Register <register>; Grid Voltage phase L1
 #================================================
     def Ac_AN_Voltage(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30783,2,slave=self.unit) # AC AN Voltage
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC AN Voltage
             Value = self.DecodeValue(rr, "uint32")
             self.SMAConnection.close()
             return Value/100
@@ -223,12 +223,12 @@ class SMACommunication:
 
 #========== AC Total Current ===================
 #
-# Register 30795; Grid Current
+# Register <register>; Grid Current
 #================================================
     def Ac_Total_Current(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30795,2,slave=self.unit) # AC Total Current
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC Total Current
             Value = self.DecodeValue(rr, "uint32")
             self.SMAConnection.close()
             return Value/1000
@@ -241,12 +241,12 @@ class SMACommunication:
 
 #========== AC Frequency ========================
 #
-# Register 30803; Grid frequency
+# Register <register>; Grid frequency
 #================================================
     def Ac_Frequency(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30803,2,slave=self.unit) # AC  Frequency
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC  Frequency
             Value = self.DecodeValue(rr, "uint32")
             self.SMAConnection.close()
             return Value/100
@@ -260,12 +260,12 @@ class SMACommunication:
 
 #========== AC Phase A Current =================
 #
-# Register 30977; Grid Current Phase L1
+# Register <register>; Grid Current Phase L1
 #================================================
     def Ac_Phase_A_Current(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30977,2,slave=self.unit) # AC Phase A Current
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC Phase A Current
             Value = self.DecodeValue(rr, "int32")
             self.SMAConnection.close()
             return Value/1000
@@ -279,12 +279,12 @@ class SMACommunication:
 
 #========== Reactive Powrer ===================
 #
-# Register 30805; Reactive Power (VAr)
+# Register <register>; Reactive Power (VAr)
 #================================================
     def Reactive_Power(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30805,2,slave=self.unit) # Reactive Power
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # Reactive Power
             Value = self.DecodeValue(rr, "int32")
             self.SMAConnection.close()
             return Value
@@ -298,12 +298,12 @@ class SMACommunication:
 
 #========== Apparent Power ====================
 #
-# Register 30813; Apparent Power
+# Register <register>; Apparent Power
 #================================================
     def Apparent_Power(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30813,2,slave=self.unit) # Apparent Power
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # Apparent Power
             Value = self.DecodeValue(rr, "int32")
             self.SMAConnection.close()
             return Value
@@ -316,12 +316,12 @@ class SMACommunication:
 
 #==========  Power Factor =====================
 #
-# Register 30949; Displacement Power Factor
+# Register <register>; Displacement Power Factor
 #================================================
     def Power_Factor(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30949,2,slave=self.unit) # Power Factor
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # Power Factor
             Value = self.DecodeValue(rr, "uint32")
             self.SMAConnection.close()
             return Value
@@ -335,12 +335,12 @@ class SMACommunication:
 
 #==========  DC Current ========================
 #
-# Register 30769; DC Current Input
+# Register <register>; DC Current Input
 #================================================
     def DC_Current(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30769,2,slave=self.unit) # DC Current
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # DC Current
             Value = self.DecodeValue(rr, "int32")
             print("Current: ", Value/1000)
             self.SMAConnection.close()
@@ -354,12 +354,12 @@ class SMACommunication:
 
 #==========  DC Voltage =======================
 #
-# Register 30771; DC voltage input
+# Register <register>; DC voltage input
 #================================================
     def DC_Voltage(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30771,2,slave=self.unit) # DC Voltage
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # DC Voltage
             Value = self.DecodeValue(rr, "int32")
             print("Voltage: ", Value/100)
             self.SMAConnection.close()
@@ -373,12 +373,12 @@ class SMACommunication:
 
 #==========  DC Power =======================
 #
-# Register 30775; Total Power input
+# Register <register>; Total Power input
 #================================================
     def DC_Power(self):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(30775,2,slave=self.unit) # DC Power
+            rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # DC Power
             Value = self.DecodeValue(rr, "int32")
             print("Power: ", Value)
             self.SMAConnection.close()
@@ -395,13 +395,13 @@ class SMACommunication:
 # SMA 50 Registers ONLY (SMA 7 does not support these registers)
 #==========  AC BN Voltage ====================
 #
-# Register 30785; Grid voltage phase L2
+# Register <register>; Grid voltage phase L2
 #================================================
     def AC_BN_Voltage(self):
         try:
             self.OpenClient()
             if (self.IP == self.SMA50_IP):
-                rr = self.SMAConnection.read_holding_registers(30785,2,slave=self.unit) # AC BN Voltage
+                rr = self.SMAConnection.read_holding_registers(<regsister>,2,slave=self.unit) # AC BN Voltage
                 Value = self.DecodeValue(rr, "uint32")
             
             self.SMAConnection.close()
@@ -416,13 +416,13 @@ class SMACommunication:
 
 #==========  AC CN Voltage ==================
 #
-# Register 30787; Grid Voltage phase L3
+# Register <register>; Grid Voltage phase L3
 #================================================
     def AC_CN_Voltage(self):
         try:
             self.OpenClient()
             if (self.IP == self.SMA50_IP):
-                rr = self.SMAConnection.read_holding_registers(30787,2,slave=self.unit) # AC CN Voltage
+                rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC CN Voltage
                 Value = self.DecodeValue(rr, "uint32")
 
             self.SMAConnection.close()
@@ -437,13 +437,13 @@ class SMACommunication:
 
 #==========  AC AB Voltage =================
 #
-# Register 30789; Grid Voltage phase L1 against L2
+# Register <register>; Grid Voltage phase L1 against L2
 #================================================
     def AC_AB_Voltage(self):
         try:
             self.OpenClient()
             if (self.IP == self.SMA50_IP):
-                rr = self.SMAConnection.read_holding_registers(30789,2,salve=self.unit) # AC AB Voltage
+                rr = self.SMAConnection.read_holding_registers(<register>,2,salve=self.unit) # AC AB Voltage
                 Value = self.DecodeValue(rr, "uint32")
 
             self.SMAConnection.close()
@@ -458,13 +458,13 @@ class SMACommunication:
 
 #==========  AC BC Voltage =================
 #
-# Register 30791; Grid Voltage phase L2 against L3
+# Register <register>; Grid Voltage phase L2 against L3
 #================================================
     def AC_BC_Voltage(self):
         try:
             self.OpenClient()
             if (self.IP == self.SMA50_IP):
-                rr = self.SMAConnection.read_holding_registers(30791,2,slave=self.unit) # AC BC Voltage
+                rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC BC Voltage
                 Value = self.DecodeValue(rr, "uint32")
 
             self.SMAConnection.close()
@@ -479,13 +479,13 @@ class SMACommunication:
 
 #==========  AC CA Voltage ===================
 #
-# Register 30793; Grid Voltage phase L3 against L1
+# Register <register>; Grid Voltage phase L3 against L1
 #================================================
     def AC_CA_Voltage(self):
         try:
             self.OpenClient()
             if (self.IP == self.SMA50_IP):
-                rr = self.SMAConnection.read_holding_registers(30793,2,slave=self.unit) # AC CA Voltage
+                rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC CA Voltage
                 Value = self.DecodeValue(rr, "uint32")
 
             self.SMAConnection.close()
@@ -500,13 +500,13 @@ class SMACommunication:
 
 #==========  AC  Phase B Current ===============
 #
-# Register 30979; Grid Current phase L1
+# Register <register>; Grid Current phase L1
 #================================================
     def AC_Phase_B_Current(self):
         try:
             self.OpenClient()
             if (self.IP == self.SMA50_IP):
-                rr = self.SMAConnection.read_holding_registers(30979,2,slave=self.unit) # AC Phase B Current
+                rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC Phase B Current
                 Value = self.DecodeValue(rr, "int32")
 
             self.SMAConnection.close()
@@ -522,13 +522,13 @@ class SMACommunication:
 
 #==========  AC  Phase C Current =============
 #
-# Register 30981; Grid Current phase L2
+# Register <register>; Grid Current phase L2
 #================================================
     def AC_Phase_C_Current(self):
         try:
             self.OpenClient()
             if (self.IP == self.SMA50_IP):
-                rr = self.SMAConnection.read_holding_registers(30981,2,slave=self.unit) # AC Phase C Current
+                rr = self.SMAConnection.read_holding_registers(<register>,2,slave=self.unit) # AC Phase C Current
                 Value = self.DecodeValue(rr, "int32")
 
             self.SMAConnection.close()
@@ -543,21 +543,21 @@ class SMACommunication:
 
 #=========== Max_Output_Active_Power =============
 #
-# Register 40915; Set Active Power Limit
+# Register <register>; Set Active Power Limit
 # 0 W - 7730 W (SunnyBoy) or 0 - 66000W (Sunny TriPower)
 #================================================
     def Max_Output_Active_Power(self, amount):
         try:
             self.OpenClient()
-            rr = self.SMAConnection.read_holding_registers(40915,2,slave=self.unit) # AC Phase C Current (from SunnyBoy)
+            rr = self.SMAConnection.read_holding_registers(<registser>,2,slave=self.unit) # AC Phase C Current (from SunnyBoy)
             Value = self.DecodeValue(rr, "uint32")
             print("Output Active Power:\t",Value, "W\n" )
             print("Set Active Power to: \t",amount,"W\n")
             temp_power = [0,0]
             temp_power[0] = (int(amount) >> 16) & 0xFFFF
             temp_power[1] = int(amount) & 0xFFFF
-            self.SMAConnection.write_registers(40915,temp_power,slave=self.unit)
-            rr = self.SMAConnection.read_holding_registers(40915,2,slave=self.unit) # AC Phase C Current (from SunnyBoy)
+            self.SMAConnection.write_registers(<register>,temp_power,slave=self.unit)
+            rr = self.SMAConnection.read_holding_registers(<registrer>,2,slave=self.unit) # AC Phase C Current (from SunnyBoy)
             Value = self.DecodeValue(rr, "uint32")
             print("Output Active Power:\t",Value, "W\n" )
             self.SMAConnection.close()
@@ -567,115 +567,10 @@ class SMACommunication:
             print(e)
     
 
-    #======================================================================================================
-    ## Connects and reads the Modbus registers
-    def SMA(self):
-        try:
-            sma = ModbusTcpClient(self.IP, port = self.port, timeout = self.timeout, baudrate = self.baudrate)
-
-    # connect to SMA
-            print("\n Connecting to SMA7_0: IpAddress", self.IP," Port", self.port )
-            open = sma.connect() # open is True/False
-            if(open):
-                print("\n <<<< Connected >>>>\n")
-            else:
-                raise Exception (" Connection Failed\n")
-
-    # read registers
-
-            rr = sma.read_input_registers(40223,1,unit=126) # Operating Status
-            Value = self.DecodeValue(rr, "uint16")
-            Value = self.CheckStatus(Value)
-            print("status:\t",Value, "\n" )
-
-            rr = sma.read_holding_registers(30513,4,unit=self.unit) # AC lifetime
-            Value = self.DecodeValue(rr, "uint64")
-            print("AC lifetime:\t","{:,}".format(Value/1000), "KW\n" )
-
-            rr = sma.read_holding_registers(30775,2,unit=self.unit) # AC Power
-            Value = self.DecodeValue(rr, "int32")
-            print("AC Power:\t\t",Value/1000, "KW" )
-
-            rr = sma.read_holding_registers(30783,2,unit=self.unit) # AC AN Voltage
-            Value = self.DecodeValue(rr, "uint32")
-            print("AC AN Voltage:\t\t",Value/100, "V" )
-
-
-            rr = sma.read_holding_registers(30795,2,unit=self.unit) # AC Total Current
-            Value = self.DecodeValue(rr, "uint32")
-            print("AC total current:\t",Value/1000, "A" )
-
-            rr = sma.read_holding_registers(30803,2,unit=self.unit) # AC  Frequency
-            Value = self.DecodeValue(rr, "uint32")
-            print("AC Frequency:\t\t",Value/100, "Hz" )
-
-            rr = sma.read_holding_registers(30977,2,unit=self.unit) # AC Phase A Current
-            Value = self.DecodeValue(rr, "int32")
-            print("AC Phase A Current:\t",Value/1000, "A\n" )
-
-            rr = sma.read_holding_registers(30805,2,unit=self.unit) # Reactive Power
-            Value = self.DecodeValue(rr, "int32")
-            print("Reactive Power:\t",Value, "Var" )
-
-            rr = sma.read_holding_registers(30813,2,unit=self.unit) # Apparent Power
-            Value = self.DecodeValue(rr, "int32")
-            print("Apparent Power:\t",Value, "VA" )
-
-            rr = sma.read_holding_registers(30949,2,unit=self.unit) # Power Factor
-            Value = self.DecodeValue(rr, "uint32")
-            print("Power Factor:\t",Value, "\n" )
-
-            rr = sma.read_holding_registers(30769,2,unit=self.unit) # DC Current
-            Value = self.DecodeValue(rr, "int32")
-            print("DC Current:\t",Value/1000, "A" )
-
-            rr = sma.read_holding_registers(30771,2,unit=self.unit) # DC Voltage
-            Value = self.DecodeValue(rr, "int32")
-            print("DC Voltage:\t",Value/100, "V" )
-
-            rr = sma.read_holding_registers(30773,2,unit=self.unit) # DC Power
-            Value = self.DecodeValue(rr, "int32")
-            print("DC Power:\t",Value/1000, "KW" )
-
-            if (self.IP == self.SMA50_IP):
-                rr = sma.read_holding_registers(30785,2,unit=self.unit) # AC BN Voltage
-                Value = self.DecodeValue(rr, "uint32")
-                print("AC BN Voltage:\t",Value, "V" )
-    
-                rr = sma.read_holding_registers(30787,2,unit=self.unit) # AC CN Voltage
-                Value = self.DecodeValue(rr, "uint32")
-                print("AC CN Voltage:\t",Value, "V" )
-    
-                rr = sma.read_holding_registers(30789,2,unit=self.unit) # AC AB Voltage
-                Value = self.DecodeValue(rr, "uint32")
-                print("AC AB Voltage:\t",Value, "V" )
-    
-                rr = sma.read_holding_registers(30791,2,unit=self.unit) # AC BC Voltage
-                Value = self.DecodeValue(rr, "uint32")
-                print("AC BC Voltage:\t",Value, "V" )
-    
-                rr = sma.read_holding_registers(30793,2,unit=self.unit) # AC CA Voltage
-                Value = self.DecodeValue(rr, "uint32")
-                print("AC CA Voltage:\t",Value, "V" )
-    
-                rr = sma.read_holding_registers(30979,2,unit=self.unit) # AC Phase B Current
-                Value = self.DecodeValue(rr, "int32")
-                print("AC Phase B Current:\t",Value, "A" )
-    
-                rr = sma.read_holding_registers(30981,2,unit=self.unit) # AC Phase C Current
-                Value = self.DecodeValue(rr, "int32")
-                print("AC Phase C Current:\t",Value, "A\n" )
-
-    # close connection
-            sma.close()
-
-        except Exception as e:
-            sma.close()
-            raise Exception (e)
-
+ 
             
 async def main():
-    SMA = SMACommunication(ip="192.168.225.50", port=502, unit=3, timeout=8, baudrate=9600)
+    SMA = SMACommunication(ip=<ip>, port=<port>, unit=3, timeout=8, baudrate=9600)
     print("Daily energy")
     SMA.DC_Voltage()
     SMA.DC_Current()
