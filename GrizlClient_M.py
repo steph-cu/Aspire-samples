@@ -76,7 +76,7 @@ async def calling(name, duration, limit, number):
                 # 'manualControl':,
                 # 'createdAt':,
                 # 'updatedAt':,
-                'ChargerId':'grs' # probably needs to change b/t clients
+                'ChargerId':<chargerID> # probably needs to change b/t clients
             }
             await cp.send_max_limitation_from_db(profile)
         elif name == 'start':
@@ -114,7 +114,7 @@ async def on_connect(websocket, path):
 
 async def setup():
     server = await websockets.serve(
-        on_connect, '0.0.0.0', 80, subprotocols=["ocpp1.6"]
+        on_connect, '0.0.0.0', <port>, subprotocols=["ocpp1.6"]
     )
     global cpi
     global ws
@@ -162,7 +162,7 @@ async def handle_event(event):
     return 'optIn'
 
 now = datetime.now()
-client = openleadr.OpenADRClient(ven_name='Grizl', vtn_url='http://localhost:8020/OpenADR2/Simple/2.0b', ven_id='ven_id_300')
+client = openleadr.OpenADRClient(ven_name=<Ven_Name>, vtn_url=<localhost>, ven_id=<ven_id>)
 
 client.add_report(callback=get_MeterCurrent,
                     report_specifier_id='MeterValue',
